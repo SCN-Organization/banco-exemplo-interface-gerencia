@@ -3,6 +3,7 @@ package br.ufrpe.poo.banco.negocio;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import br.ufrpe.poo.banco.exceptions.SaldoInsuficienteException;
@@ -81,7 +82,7 @@ public class TesteConta {
 	/**
 	 * Testa que o metodo creditar de conta nao permite creditar valor negativo
 	 */
-	@Test
+	@Test 
 	public void creditarValorNegativoNaoMudaSaldo() {
 		
 		Conta c = new Conta("6564", 2000);

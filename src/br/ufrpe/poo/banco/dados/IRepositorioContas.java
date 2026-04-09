@@ -15,7 +15,7 @@ public interface IRepositorioContas {
 	 * 
 	 * @param conta
 	 *            conta a ser inserida.
-	 * @return se conta foi inserida do repositorio. Se a conta ja existe no
+	 * @return se conta foi inserida no repositorio. Se a conta ja existe no
 	 *         repositorio nao sera inserida.
 	 * @throws RepositorioException
 	 *             levantada quando ocorre erro no repositorio.

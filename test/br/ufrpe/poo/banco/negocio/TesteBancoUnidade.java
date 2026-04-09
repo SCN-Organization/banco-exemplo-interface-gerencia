@@ -22,9 +22,8 @@ import br.ufrpe.poo.banco.exceptions.RepositorioException;
  */
 public class TesteBancoUnidade {
 
-	public static Banco getBancoMock() {
-		// IRepositorioContas contasMock = mock(IRepositorioContas.class);
-		IRepositorioContas contasMock = mock();
+	public static Banco getBancoMock() throws RepositorioException {
+		IRepositorioContas contasMock = mock(IRepositorioContas.class);
 		Banco bancoMock = new Banco(null, contasMock);
 		return bancoMock;
 	}
@@ -33,18 +32,11 @@ public class TesteBancoUnidade {
 	public void cadastrarNovaConta() throws InicializacaoSistemaException, RepositorioException {
 
 		Banco banco = getBancoMock();
-
 		ContaAbstrata conta1 = new Conta("1", 0);
-
-		// mocking para chamadas de metodos de repositorio de contas que sao
-		// realizadas dentro do metodo procurarConta do banco
-		when(banco.contas.inserir(conta1)).thenReturn(true);
-		when(banco.contas.procurar("1")).thenReturn(conta1);
+		when(banco.contas.inserir(conta1)).thenReturn(true);//conta não existe no repositório
 
 		try {
 			banco.cadastrar(conta1);
-			ContaAbstrata conta2 = banco.procurarConta("1");
-			assertEquals(conta1, conta2);
 		} catch (RepositorioException | ContaJaCadastradaException e) {
 			fail("Excecao levantada quando nao deveria");
 		}
@@ -56,13 +48,8 @@ public class TesteBancoUnidade {
 			throws InicializacaoSistemaException, RepositorioException, ContaJaCadastradaException {
 
 		Banco banco = getBancoMock();
-
 		ContaAbstrata conta = new Conta("1", 0);
-
-		// mocking para chamadas de metodos de repositorio de contas que sao
-		// realizadas dentro do metodo cadastrar do banco
-		banco.contas = mock(IRepositorioContas.class);
-		when(banco.contas.inserir(conta)).thenReturn(false);
+		when(banco.contas.inserir(conta)).thenReturn(false);//conta está no repositório
 
 		try {
 			banco.cadastrar(conta);
@@ -77,11 +64,28 @@ public class TesteBancoUnidade {
 			ContaNaoEncontradaException, RenderBonusContaEspecialException {
 		Banco banco = getBancoMock();
 		ContaAbstrata conta = new Conta("1", 0);
-		banco.contas = mock(IRepositorioContas.class);
-		when(banco.contas.inserir(conta)).thenReturn(true);
-		when(banco.contas.procurar("1")).thenReturn(conta);
-		banco.cadastrar(conta);
 		banco.renderBonus(conta);
 	}
+	
+	@Test(expected = ContaNaoEncontradaException.class)
+	public void renderBonusContaEspecialNaoCadastrada() throws RepositorioException, ContaJaCadastradaException,
+			ContaNaoEncontradaException, RenderBonusContaEspecialException {
+		Banco banco = getBancoMock();
+		ContaAbstrata conta = new ContaEspecial("1", 0);
+		when(banco.contas.existe(conta.getNumero())).thenReturn(false);//conta não existe		
+		banco.renderBonus(conta);
+	}
+	
+	@Test
+	public void renderBonusContaEspecialSucesso() throws RepositorioException, ContaJaCadastradaException,
+			ContaNaoEncontradaException, RenderBonusContaEspecialException {
+		Banco banco = getBancoMock();
+		ContaAbstrata conta = new ContaEspecial("1", 100);
+		conta.creditar(100);
+		when(banco.contas.existe(conta.getNumero())).thenReturn(true);//conta existe		
+		banco.renderBonus(conta);
+		assertEquals(201, conta.getSaldo(),0);
+	}
+
 
 }

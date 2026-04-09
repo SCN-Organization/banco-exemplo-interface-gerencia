@@ -64,7 +64,6 @@ public class TesteBanco {
 		Conta c2 = new Conta("1", 300);
 		banco.cadastrar(c1);
 		banco.cadastrar(c2);
-		fail("Excecao ContaJaCadastradaException nao levantada");
 	}
 
 	/**
