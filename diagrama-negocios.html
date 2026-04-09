@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diagrama de Classes — pacote negocio</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      letter-spacing: -0.5px;
+    }
+    header p {
+      margin-top: 6px;
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+    .badge {
+      display: inline-block;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 2px 10px;
+      font-size: 0.78rem;
+      color: #7dd3fc;
+      font-family: monospace;
+    }
+
+    /* Legend */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 0.82rem;
+    }
+    .legend-line {
+      width: 36px;
+      height: 2px;
+    }
+    .solid       { background: #60a5fa; }
+    .dashed      { background: repeating-linear-gradient(to right, #a78bfa 0 6px, transparent 6px 10px); height: 2px; }
+    .assoc       { background: #34d399; }
+    .dep         { background: repeating-linear-gradient(to right, #fbbf24 0 6px, transparent 6px 10px); height: 2px; }
+
+    /* Diagram card */
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 32px;
+      width: 100%;
+      max-width: 1100px;
+      overflow-x: auto;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.4);
+    }
+    .mermaid {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Details table */
+    .details {
+      margin-top: 32px;
+      width: 100%;
+      max-width: 1100px;
+    }
+    .details h2 {
+      font-size: 1.1rem;
+      color: #94a3b8;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.8rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .class-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .class-card .class-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+    .class-card .class-type {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    .type-abstract  { background: #7c3aed22; color: #a78bfa; border: 1px solid #7c3aed44; }
+    .type-interface { background: #0369a122; color: #7dd3fc; border: 1px solid #0369a144; }
+    .type-class     { background: #05966922; color: #34d399; border: 1px solid #05966944; }
+    .type-singleton { background: #b4530022; color: #fb923c; border: 1px solid #b4530044; }
+    .class-card ul {
+      list-style: none;
+      font-size: 0.82rem;
+      color: #94a3b8;
+      line-height: 1.7;
+    }
+    .class-card ul li::before { content: "▸ "; color: #475569; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Diagrama de Classes</h1>
+  <p>Pacote <span class="badge">br.ufrpe.poo.banco.negocio</span></p>
+</header>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-line solid"></div> Herança / Realização (sólida)</div>
+  <div class="legend-item"><div class="legend-line dashed"></div> Implementação de interface (tracejada)</div>
+  <div class="legend-item"><div class="legend-line assoc"></div> Associação (composição / campo)</div>
+  <div class="legend-item"><div class="legend-line dep"></div> Dependência (uso em métodos)</div>
+</div>
+
+<div class="card">
+  <div class="mermaid">
+classDiagram
+  direction TB
+
+  %% ── Interfaces ──────────────────────────────────────────────
+  class ICliente {
+    <<interface>>
+    +procurarCliente(cpf) Cliente
+    +procurarConta(numero) ContaAbstrata
+    +creditar(conta, valor) void
+    +debitar(conta, valor) void
+    +transferir(origem, destino, valor) void
+  }
+
+  class IGerencia {
+    <<interface>>
+    +cadastrarCliente(cliente) void
+    +cadastrar(conta) void
+    +associarConta(cpf, numeroConta) void
+    +removerCliente(cpf) void
+    +removerConta(cliente, numero) void
+    +atualizarCliente(cliente) void
+  }
+
+  %% ── Contas ───────────────────────────────────────────────────
+  class ContaAbstrata {
+    <<abstract>>
+    #numero : String
+    #saldo : double
+    +getNumero() String
+    +getSaldo() double
+    +creditar(valor) void
+    +debitar(valor)* void
+  }
+
+  class Conta {
+    +debitar(valor) void
+  }
+
+  class ContaEspecial {
+    #bonus : double
+    +getBonus() double
+    +creditar(valor) void
+    +renderBonus() void
+  }
+
+  class Poupanca {
+    +renderJuros(taxa) void
+  }
+
+  class ContaImposto {
+    +CPMF : double
+    +debitar(valor) void
+  }
+
+  %% ── Cliente ──────────────────────────────────────────────────
+  class Cliente {
+    #nome : String
+    #cpf : String
+    #contas : ArrayList~String~
+    +getNome() String
+    +getCpf() String
+    +getContas() ArrayList~String~
+    +adicionarConta(numero) void
+    +removerConta(numero) void
+  }
+
+  %% ── Banco ────────────────────────────────────────────────────
+  class Banco {
+    <<Singleton>>
+    -instance : Banco
+    #clientes : IRepositorioClientes
+    #contas : IRepositorioContas
+    +getInstance() Banco
+    +renderBonus(conta) void
+    +renderJuros(conta) void
+  }
+
+  %% ── Relações de herança / realização ────────────────────────
+  IGerencia      --|>  ICliente       : extends
+  Conta          --|>  ContaAbstrata  : extends
+  ContaEspecial  --|>  Conta          : extends
+  Poupanca       --|>  Conta          : extends
+  ContaImposto   --|>  ContaAbstrata  : extends
+
+  %% ── Implementações ──────────────────────────────────────────
+  Banco          ..|>  IGerencia      : implements
+  Banco          ..|>  ICliente       : implements
+
+  %% ── Associações (campos / composição) ───────────────────────
+  Banco          "1" *-- "1"  IRepositorioClientes : clientes
+  Banco          "1" *-- "1"  IRepositorioContas   : contas
+  Cliente        "1" o-- "*"  String               : contas (números)
+
+  %% ── Dependências (uso em métodos) ───────────────────────────
+  Banco          ..>  Cliente        : usa
+  Banco          ..>  ContaAbstrata  : usa
+  Banco          ..>  ContaEspecial  : instanceof / cast
+  Banco          ..>  Poupanca       : instanceof / cast
+
+  %% ── Repositórios (externos ao pacote) ──────────────────────
+  class IRepositorioClientes {
+    <<interface>>
+  }
+  class IRepositorioContas {
+    <<interface>>
+  }
+  </div>
+</div>
+
+<!-- Detail cards -->
+<div class="details">
+  <h2>Resumo das Classes</h2>
+  <div class="grid">
+
+    <div class="class-card">
+      <div class="class-name">ICliente</div>
+      <span class="class-type type-interface">Interface</span>
+      <ul>
+        <li>Contrato de operações bancárias do cliente</li>
+        <li>creditar, debitar, transferir</li>
+        <li>procurarCliente / procurarConta</li>
+      </ul>
+    </div>
+
+    <div class="class-card">
+      <div class="class-name">IGerencia</div>
+      <span class="class-type type-interface">Interface</span>
+      <ul>
+        <li>Estende ICliente</li>
+        <li>Operações administrativas do banco</li>
+        <li>cadastrar, associar, remover, atualizar</li>
+      </ul>
+    </div>
+
+    <div class="class-card">
+      <div class="class-name">ContaAbstrata</div>
+      <span class="class-type type-abstract">Abstrata</span>
+      <ul>
+        <li>Base de todas as contas</li>
+        <li>Campos: numero, saldo</li>
+        <li>debitar() é abstrato</li>
+        <li>Implements Serializable</li>
+      </ul>
+    </div>
+
+    <div class="class-card">
+      <div class="class-name">Conta</div>
+      <span class="class-type type-class">Classe</span>
+      <ul>
+        <li>Conta corrente simples</li>
+        <li>Lança SaldoInsuficienteException ao debitar</li>
+        <li>Saldo não pode ser negativo</li>
+      </ul>
+    </div>
+
+    <div class="class-card">
+      <div class="class-name">ContaEspecial</div>
+      <span class="class-type type-class">Classe</span>
+      <ul>
+        <li>Herda de Conta</li>
+        <li>Acumula bônus (1% a cada crédito)</li>
+        <li>renderBonus() credita e zera o bônus</li>
+      </ul>
+    </div>
+
+    <div class="class-card">
+      <div class="class-name">Poupança</div>
+      <span class="class-type type-class">Classe</span>
+      <ul>
+        <li>Herda de Conta</li>
+        <li>renderJuros(taxa) sobre o saldo atual</li>
+        <li>Implements Serializable (explícito)</li>
+      </ul>
+    </div>
+
+    <div class="class-card">
+      <div class="class-name">ContaImposto</div>
+      <span class="class-type type-class">Classe</span>
+      <ul>
+        <li>Herda diretamente de ContaAbstrata</li>
+        <li>CPMF = 0,38% incide em cada débito</li>
+        <li>Desconta valor + imposto</li>
+      </ul>
+    </div>
+
+    <div class="class-card">
+      <div class="class-name">Cliente</div>
+      <span class="class-type type-class">Classe</span>
+      <ul>
+        <li>Campos: nome, cpf</li>
+        <li>Lista de números de conta (String)</li>
+        <li>adicionarConta / removerConta</li>
+        <li>Implements Serializable</li>
+      </ul>
+    </div>
+
+    <div class="class-card">
+      <div class="class-name">Banco</div>
+      <span class="class-type type-singleton">Singleton</span>
+      <ul>
+        <li>Implements IGerencia + ICliente</li>
+        <li>Gerencia clientes e contas via repositórios</li>
+        <li>renderBonus (ContaEspecial)</li>
+        <li>renderJuros (Poupança)</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor:        '#1e3a5f',
+      primaryTextColor:    '#e2e8f0',
+      primaryBorderColor:  '#3b82f6',
+      lineColor:           '#60a5fa',
+      secondaryColor:      '#1e293b',
+      tertiaryColor:       '#0f172a',
+      background:          '#1e293b',
+      mainBkg:             '#1e293b',
+      nodeBorder:          '#475569',
+      clusterBkg:          '#0f172a',
+      titleColor:          '#e2e8f0',
+      edgeLabelBackground: '#1e293b',
+      fontFamily:          'monospace'
+    },
+    classDiagram: {
+      diagramPadding: 20
+    }
+  });
+</script>
+</body>
+</html>

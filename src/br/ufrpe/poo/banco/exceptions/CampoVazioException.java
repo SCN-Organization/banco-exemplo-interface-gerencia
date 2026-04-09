@@ -3,7 +3,7 @@ package br.ufrpe.poo.banco.exceptions;
 /**
  * Excessao que representa um erro ao submeter um campo de texto vazio.
  * 
- * @author JoãoOtávio
+ * @author JoaoOtavio
  * 
  */
 public class CampoVazioException extends Exception {

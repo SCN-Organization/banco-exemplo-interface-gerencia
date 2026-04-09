@@ -12,7 +12,7 @@ public class InicializacaoSistemaException extends Exception {
 	private static final long serialVersionUID = 1L;
 
 	public InicializacaoSistemaException() {
-		super("Não foi possível inicializar o sistema!");
+		super("Nao foi possivel inicializar o sistema!");
 	}
 
 }

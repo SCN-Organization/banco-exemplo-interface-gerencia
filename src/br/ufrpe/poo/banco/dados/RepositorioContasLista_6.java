@@ -16,7 +16,7 @@ public class RepositorioContasLista_6 implements IRepositorioContas{
 
 	@Override
 	public boolean inserir(ContaAbstrata conta) throws RepositorioException {
-		if(conta==null) { //se conta não existe
+		if(conta==null) { //se conta nao existe
 			return false;
 		} else if(this.existe(conta.getNumero())) { //conta ja existe no banco
 			return false;
@@ -31,7 +31,7 @@ public class RepositorioContasLista_6 implements IRepositorioContas{
 		if(this.existe(numero)) { //remover conta que existe
 			contas.remove(this.procurar(numero));
 			return true;
-		} else //conta não existe no repositorio
+		} else //conta nao existe no repositorio
 		return false;
 	}
 
