@@ -1,7 +1,6 @@
 package br.ufrpe.poo.banco.negocio;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -11,9 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import br.ufrpe.poo.banco.exceptions.ContaJaCadastradaException;
-import br.ufrpe.poo.banco.exceptions.ContaNaoEncontradaException;
 import br.ufrpe.poo.banco.exceptions.InicializacaoSistemaException;
-import br.ufrpe.poo.banco.exceptions.RenderJurosPoupancaException;
 import br.ufrpe.poo.banco.exceptions.RepositorioException;
 import br.ufrpe.poo.banco.exceptions.SaldoInsuficienteException;
 import br.ufrpe.poo.banco.exceptions.ValorInvalidoException;
@@ -41,8 +38,7 @@ public class TesteBanco {
 	 */
 	@Test
 	public void contaCadastradaPersistidaCorretamente() throws RepositorioException,
-			ContaJaCadastradaException, ContaNaoEncontradaException,
-			InicializacaoSistemaException {
+			ContaJaCadastradaException {
 
 		ContaAbstrata conta1 = new Conta("1", 100);
 		banco.cadastrar(conta1);
@@ -57,8 +53,7 @@ public class TesteBanco {
 	 */
 	@Test(expected = ContaJaCadastradaException.class)
 	public void tentativaCadastrarContaJaExistente() throws RepositorioException,
-			ContaJaCadastradaException, ContaNaoEncontradaException,
-			InicializacaoSistemaException {
+			ContaJaCadastradaException {
 
 		Conta c1 = new Conta("1", 200);
 		Conta c2 = new Conta("1", 300);
@@ -73,7 +68,6 @@ public class TesteBanco {
 	 */
 	@Test
 	public void testeCreditarSaldoSuficiente() throws RepositorioException,
-			ContaNaoEncontradaException, InicializacaoSistemaException,
 			ContaJaCadastradaException, ValorInvalidoException {
 
 		ContaAbstrata conta = new Conta("1", 100);
@@ -90,9 +84,8 @@ public class TesteBanco {
 	 */
 	@Test
 	public void testeDebitarSaldoSuficiente() throws RepositorioException,
-			ContaNaoEncontradaException, SaldoInsuficienteException,
-			InicializacaoSistemaException, ContaJaCadastradaException,
-			ValorInvalidoException {
+			SaldoInsuficienteException, 
+			ContaJaCadastradaException, ValorInvalidoException {
 
 		ContaAbstrata conta = new Conta("1", 50);
 		banco.cadastrar(conta);
@@ -108,9 +101,7 @@ public class TesteBanco {
 	 */
 	@Test
 	public void transferirEntreContasCorrentesSaldoSuficiente() throws RepositorioException,
-			ContaNaoEncontradaException, SaldoInsuficienteException,
-			InicializacaoSistemaException, ContaJaCadastradaException,
-			ValorInvalidoException {
+			SaldoInsuficienteException, ContaJaCadastradaException, ValorInvalidoException {
 
 		ContaAbstrata conta1 = new Conta("1", 100);
 		ContaAbstrata conta2 = new Conta("2", 200);
@@ -129,8 +120,7 @@ public class TesteBanco {
 	 */
 	@Test
 	public void renderJurosContaPoupanca() throws RepositorioException,
-			ContaNaoEncontradaException, RenderJurosPoupancaException,
-			InicializacaoSistemaException, ContaJaCadastradaException {
+	ContaJaCadastradaException {
 
 		Poupanca poupanca = new Poupanca("20", 100);
 		banco.cadastrar(poupanca);

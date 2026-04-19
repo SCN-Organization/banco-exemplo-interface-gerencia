@@ -29,7 +29,7 @@ public class TesteConta {
 	public void inicializaContaSaldoNegativo() {
 		
 		Conta c = new Conta("1", -786);
-		assertEquals(0, c.getSaldo(), 0);
+		assertEquals("Saldo deveria ser 0", 0, c.getSaldo(), 0);
 	}
 
 	/**
