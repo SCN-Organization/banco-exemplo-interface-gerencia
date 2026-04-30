@@ -5,12 +5,12 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import br.ufrpe.poo.banco.dados.IRepositorioContas;
 import br.ufrpe.poo.banco.exceptions.ContaJaCadastradaException;
 import br.ufrpe.poo.banco.exceptions.ContaNaoEncontradaException;
-import br.ufrpe.poo.banco.exceptions.InicializacaoSistemaException;
 import br.ufrpe.poo.banco.exceptions.RenderBonusContaEspecialException;
 import br.ufrpe.poo.banco.exceptions.RepositorioException;
 
@@ -22,14 +22,14 @@ import br.ufrpe.poo.banco.exceptions.RepositorioException;
  */
 public class TesteBancoUnidade {
 
-	public static Banco getBancoMock() throws RepositorioException {
+	public static Banco getBancoMock() {
 		IRepositorioContas contasMock = mock(IRepositorioContas.class);
 		Banco bancoMock = new Banco(null, contasMock);
 		return bancoMock;
 	}
 
 	@Test
-	public void cadastrarNovaConta() throws InicializacaoSistemaException, RepositorioException {
+	public void cadastrarNovaConta() throws RepositorioException {
 
 		Banco banco = getBancoMock();
 		ContaAbstrata conta1 = new Conta("1", 0);
@@ -40,35 +40,32 @@ public class TesteBancoUnidade {
 		} catch (RepositorioException | ContaJaCadastradaException e) {
 			fail("Excecao levantada quando nao deveria");
 		}
-
+		
 	}
 
 	@Test(expected = ContaJaCadastradaException.class)
 	public void cadastrarContaExiste()
-			throws InicializacaoSistemaException, RepositorioException, ContaJaCadastradaException {
+			throws RepositorioException, ContaJaCadastradaException {
 
 		Banco banco = getBancoMock();
 		ContaAbstrata conta = new Conta("1", 0);
-		when(banco.contas.inserir(conta)).thenReturn(false);//conta está no repositório
+		when(banco.contas.inserir(conta)).thenReturn(false);//conta existe no repositório
 
-		try {
-			banco.cadastrar(conta);
-			fail("ContaJaCadastradaException nao foi lancada");
-		} catch (RepositorioException e) {
-			fail("Nao eh possivel erro em repositorio mock");
-		}
+		banco.cadastrar(conta);
 	}
 
 	@Test(expected = RenderBonusContaEspecialException.class)
-	public void renderBonusContaNaoEspecial() throws RepositorioException, ContaJaCadastradaException,
+	public void renderBonusContaNaoEspecial() throws RepositorioException, 
 			ContaNaoEncontradaException, RenderBonusContaEspecialException {
 		Banco banco = getBancoMock();
 		ContaAbstrata conta = new Conta("1", 0);
+		//esse teste so precisa que exista o repositório
+		//nao precisa emular o comportamento do repositorio
 		banco.renderBonus(conta);
 	}
 	
 	@Test(expected = ContaNaoEncontradaException.class)
-	public void renderBonusContaEspecialNaoCadastrada() throws RepositorioException, ContaJaCadastradaException,
+	public void renderBonusContaEspecialNaoCadastrada() throws RepositorioException, 
 			ContaNaoEncontradaException, RenderBonusContaEspecialException {
 		Banco banco = getBancoMock();
 		ContaAbstrata conta = new ContaEspecial("1", 0);
@@ -77,13 +74,13 @@ public class TesteBancoUnidade {
 	}
 	
 	@Test
-	public void renderBonusContaEspecialSucesso() throws RepositorioException, ContaJaCadastradaException,
+	public void renderBonusContaEspecialSucesso() throws RepositorioException,
 			ContaNaoEncontradaException, RenderBonusContaEspecialException {
 		Banco banco = getBancoMock();
 		ContaAbstrata conta = new ContaEspecial("1", 100);
-		conta.creditar(100);
 		when(banco.contas.existe(conta.getNumero())).thenReturn(true);//conta existe		
-		banco.renderBonus(conta);
+		conta.creditar(100);
+		banco.renderBonus(conta);	
 		assertEquals(201, conta.getSaldo(),0);
 	}
 

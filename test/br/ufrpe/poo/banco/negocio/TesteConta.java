@@ -1,10 +1,12 @@
 package br.ufrpe.poo.banco.negocio;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 
 import br.ufrpe.poo.banco.exceptions.SaldoInsuficienteException;
 
@@ -65,17 +67,15 @@ public class TesteConta {
 	 * existe saldo suficiente
 	 */
 	@Test
+	@DisplayName("Debitar valor maior que o saldo nao deve alterar o saldo da conta")
 	public void debitarSaldoInsuficienteNaoMudaSaldo() {
 		
 		Conta c = new Conta("2132", 42342);
-		boolean excecao = false;
-		try {
+
+		assertThrows(SaldoInsuficienteException.class, () -> {
 			c.debitar(32432423);
-		} catch (SaldoInsuficienteException e) {
-			excecao = true;
-		}
-		if (!excecao)
-			fail("Nao levantou SaldoInsuficienteException");
+		});
+		
 		assertEquals("Saldo nao deveria ter mudado", 42342, c.getSaldo(), 0);
 	}
 
@@ -113,6 +113,13 @@ public class TesteConta {
 		Conta c1 = new Conta("456", 50);
 		Conta c2 = new Conta("456", 3423);
 		assertEquals(c1, c2);
+	}
+	
+	@Test
+	public void equalsTipoDiferenteConta() {	
+		Conta c1 = new Conta("456", 50);
+		String s = "456";
+		assertEquals(false, c1.equals(s));
 	}
 
 }
